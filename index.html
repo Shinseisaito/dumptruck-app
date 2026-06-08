@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>大型ダンプ運搬管理システム</title>
+<title>新勢商事 運行管理システム</title>
 
 <style>
 
-body{
+*{
   margin:0;
-  background:#f1f3f5;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:#f4f4f4;
   font-family:sans-serif;
   padding-bottom:120px;
 }
 
 .header{
-  background:#1f2937;
-  color:white;
+  background:#111;
+  color:#fff;
+  text-align:center;
   padding:20px;
   font-size:24px;
   font-weight:bold;
-  text-align:center;
+  border-bottom:5px solid #ff7b00;
 }
 
 .container{
@@ -30,48 +35,90 @@ body{
 }
 
 .card{
-  background:white;
+  background:#fff;
   border-radius:16px;
   padding:20px;
   margin-bottom:20px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.08);
+  box-shadow:0 3px 10px rgba(0,0,0,.1);
 }
 
 .section-title{
   font-size:20px;
   font-weight:bold;
-  margin-bottom:20px;
-  color:#111827;
+  color:#ff7b00;
+  margin-bottom:15px;
 }
 
 label{
   display:block;
-  margin-bottom:8px;
+  margin-bottom:5px;
   font-weight:bold;
 }
 
-input, textarea{
+input,
+select,
+textarea{
   width:100%;
-  box-sizing:border-box;
   padding:14px;
-  border-radius:10px;
   border:1px solid #ccc;
-  margin-bottom:20px;
+  border-radius:10px;
+  margin-bottom:15px;
   font-size:16px;
 }
 
 textarea{
-  height:120px;
+  min-height:100px;
 }
 
-.check-group{
-  margin-bottom:25px;
+.add-btn{
+  width:100%;
+  border:none;
+  padding:15px;
+  border-radius:10px;
+  background:#ff7b00;
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.result-box{
+  background:#fff3e8;
+  padding:15px;
+  border-radius:10px;
+  font-size:18px;
+  font-weight:bold;
+  color:#ff7b00;
+}
+
+.fixed-submit{
+  position:fixed;
+  left:0;
+  bottom:0;
+  width:100%;
+  background:white;
+  padding:15px;
+  box-shadow:0 -2px 10px rgba(0,0,0,.15);
+}
+
+.submit-btn{
+  width:100%;
+  border:none;
+  border-radius:12px;
+  padding:18px;
+  background:#ff7b00;
+  color:white;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.check-item{
+  margin-bottom:20px;
 }
 
 .check-title{
-  font-size:17px;
   font-weight:bold;
-  margin-bottom:10px;
+  margin-bottom:8px;
 }
 
 .check-buttons{
@@ -82,11 +129,11 @@ textarea{
 .check-buttons button{
   flex:1;
   border:none;
-  border-radius:12px;
-  padding:16px;
+  border-radius:10px;
+  padding:14px;
   font-size:18px;
   font-weight:bold;
-  background:#d1d5db;
+  background:#ddd;
 }
 
 .ok.active{
@@ -104,35 +151,6 @@ textarea{
   color:white;
 }
 
-.fixed-submit{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:white;
-  padding:15px;
-  box-shadow:0 -2px 10px rgba(0,0,0,0.1);
-}
-
-.submit-btn{
-  width:100%;
-  padding:18px;
-  border:none;
-  border-radius:14px;
-  background:#2563eb;
-  color:white;
-  font-size:22px;
-  font-weight:bold;
-}
-
-.result-box{
-  background:#eef2ff;
-  padding:15px;
-  border-radius:12px;
-  font-size:18px;
-  font-weight:bold;
-}
-
 </style>
 
 </head>
@@ -140,7 +158,7 @@ textarea{
 <body>
 
 <div class="header">
-大型ダンプ運搬管理システム
+新勢商事 運行管理システム
 </div>
 
 <div class="container">
@@ -159,8 +177,263 @@ textarea{
 <label>車両番号</label>
 <input id="truck">
 
+<label>元請会社</label>
+<input id="contractor">
+
+</div>
+
+<!-- 点呼管理 -->
+
+<div class="card">
+
+<div class="section-title">
+点呼管理
+</div>
+
+<!-- 業務前 -->
+
+<h3 style="margin-bottom:10px;">
+業務前点呼
+</h3>
+
+<label>実施有無</label>
+<select id="beforeRollCall">
+<option value=""></option>
+<option>実施</option>
+<option>未実施</option>
+</select>
+
+<label>点呼方法</label>
+<select id="beforeMethod">
+<option value=""></option>
+<option>対面</option>
+<option>電話</option>
+<option>その他</option>
+</select>
+
+<label>健康状態</label>
+<select id="beforeHealth">
+<option value=""></option>
+<option>良好</option>
+<option>不良</option>
+</select>
+
+<label>アルコールチェック</label>
+<select id="beforeAlcoholCheck">
+<option value=""></option>
+<option>実施</option>
+<option>未実施</option>
+</select>
+
+<label>酒気帯び</label>
+<select id="beforeAlcoholResult">
+<option value=""></option>
+<option>なし</option>
+<option>あり</option>
+</select>
+
+<label>検知器使用</label>
+<select id="beforeDetector">
+<option value=""></option>
+<option>使用</option>
+<option>未使用</option>
+</select>
+
+<hr style="margin:20px 0;">
+
+<!-- 中間 -->
+
+<h3 style="margin-bottom:10px;">
+中間点呼
+</h3>
+
+<label>実施有無</label>
+<select id="middleRollCall">
+<option value=""></option>
+<option>実施</option>
+<option>未実施</option>
+</select>
+
+<label>点呼方法</label>
+<select id="middleMethod">
+<option value=""></option>
+<option>対面</option>
+<option>電話</option>
+<option>その他</option>
+</select>
+
+<label>健康状態</label>
+<select id="middleHealth">
+<option value=""></option>
+<option>良好</option>
+<option>不良</option>
+</select>
+
+<label>アルコールチェック</label>
+<select id="middleAlcoholCheck">
+<option value=""></option>
+<option>実施</option>
+<option>未実施</option>
+</select>
+
+<label>酒気帯び</label>
+<select id="middleAlcoholResult">
+<option value=""></option>
+<option>なし</option>
+<option>あり</option>
+</select>
+
+<label>検知器使用</label>
+<select id="middleDetector">
+<option value=""></option>
+<option>使用</option>
+<option>未使用</option>
+</select>
+
+<hr style="margin:20px 0;">
+
+<!-- 業務後 -->
+
+<h3 style="margin-bottom:10px;">
+業務後点呼
+</h3>
+
+<label>実施有無</label>
+<select id="afterRollCall">
+<option value=""></option>
+<option>実施</option>
+<option>未実施</option>
+</select>
+
+<label>点呼方法</label>
+<select id="afterMethod">
+<option value=""></option>
+<option>対面</option>
+<option>電話</option>
+<option>その他</option>
+</select>
+
+<label>健康状態</label>
+<select id="afterHealth">
+<option value=""></option>
+<option>良好</option>
+<option>不良</option>
+</select>
+
+<label>アルコールチェック</label>
+<select id="afterAlcoholCheck">
+<option value=""></option>
+<option>実施</option>
+<option>未実施</option>
+</select>
+
+<label>酒気帯び</label>
+<select id="afterAlcoholResult">
+<option value=""></option>
+<option>なし</option>
+<option>あり</option>
+</select>
+
+<label>検知器使用</label>
+<select id="afterDetector">
+<option value=""></option>
+<option>使用</option>
+<option>未使用</option>
+</select>
+
+</div>
+
+<!-- 現場管理 -->
+
+<div class="card">
+
+<div class="section-title">
+現場情報
+</div>
+
+<div id="siteContainer">
+
+<div class="site-block">
+
 <label>現場名</label>
-<input id="site">
+<input class="siteName">
+
+<label>ユニック使用</label>
+<select class="unic">
+<option value=""></option>
+<option>有</option>
+<option>無</option>
+</select>
+
+<label>積場</label>
+<input class="loading">
+
+<label>降場</label>
+<input class="unloading">
+
+</div>
+
+</div>
+
+<button
+type="button"
+class="add-btn"
+onclick="addSite()"
+>
+＋ 現場追加
+</button>
+
+</div>
+
+<!-- ETC管理 -->
+
+<div class="card">
+
+<div class="section-title">
+ETC情報
+</div>
+
+<div id="etcContainer">
+
+<div class="etc-block">
+
+<label>支払区分</label>
+<select class="etcType">
+
+<option value=""></option>
+<option>得意先払い</option>
+<option>当社払い</option>
+<option>本人払い</option>
+
+</select>
+
+<label>乗り口IC</label>
+<input class="etcStart">
+
+<label>降り口IC</label>
+<input class="etcEnd">
+
+<label>高速使用回数</label>
+<input
+type="number"
+class="etcCount">
+
+<label>高速料金(円)</label>
+<input
+type="number"
+class="etcPrice">
+
+</div>
+
+</div>
+
+<button
+type="button"
+class="add-btn"
+onclick="addEtc()"
+>
+＋ ETC追加
+</button>
 
 </div>
 
@@ -172,27 +445,187 @@ textarea{
 運行情報
 </div>
 
-<label>始業時距離数(km)</label>
-<input type="number" id="startKm">
+<label>始業距離(km)</label>
+<input
+type="number"
+id="startKm">
 
-<label>終業時距離数(km)</label>
-<input type="number" id="endKm"
-oninput="calcDistance()">
+<label>終業距離(km)</label>
+<input
+type="number"
+id="endKm">
 
-<label>給油時距離数(km)</label>
-<input type="number" id="fuelKm">
+<label>給油時距離(km)</label>
+<input
+type="number"
+id="fuelKm">
 
-<label>給油量(L)</label>
-<input type="number" id="fuelLiter">
+<label>軽油給油量(L)</label>
+<input
+type="number"
+id="fuelLiter">
+
+<label>AdBlue給油量(L)</label>
+<input
+type="number"
+id="adblueLiter">
 
 <div class="result-box">
+
 走行距離：
-<span id="distanceResult">0</span> km
-</div>
+
+<span id="distanceResult">
+0
+</span>
+
+km
 
 </div>
 
-<!-- 点検 -->
+</div>
+
+<script>
+
+// ---------------------
+// 現場追加
+// ---------------------
+
+function addSite(){
+
+const div =
+document.createElement("div");
+
+div.className =
+"site-block";
+
+div.style.marginTop =
+"20px";
+
+div.innerHTML = `
+
+<hr style="margin:15px 0;">
+
+<label>現場名</label>
+<input class="siteName">
+
+<label>ユニック使用</label>
+<select class="unic">
+<option value=""></option>
+<option>有</option>
+<option>無</option>
+</select>
+
+<label>積場</label>
+<input class="loading">
+
+<label>降場</label>
+<input class="unloading">
+
+`;
+
+document
+.getElementById(
+"siteContainer"
+)
+.appendChild(div);
+
+}
+
+// ---------------------
+// ETC追加
+// ---------------------
+
+function addEtc(){
+
+const div =
+document.createElement("div");
+
+div.className =
+"etc-block";
+
+div.style.marginTop =
+"20px";
+
+div.innerHTML = `
+
+<hr style="margin:15px 0;">
+
+<label>支払区分</label>
+<select class="etcType">
+
+<option value=""></option>
+<option>得意先払い</option>
+<option>当社払い</option>
+<option>本人払い</option>
+
+</select>
+
+<label>乗り口IC</label>
+<input class="etcStart">
+
+<label>降り口IC</label>
+<input class="etcEnd">
+
+<label>高速使用回数</label>
+<input
+type="number"
+class="etcCount">
+
+<label>高速料金(円)</label>
+<input
+type="number"
+class="etcPrice">
+
+`;
+
+document
+.getElementById(
+"etcContainer"
+)
+.appendChild(div);
+
+}
+
+// ---------------------
+// 走行距離自動計算
+// ---------------------
+
+function calcDistance(){
+
+const start =
+Number(
+document
+.getElementById(
+"startKm"
+).value || 0
+);
+
+const end =
+Number(
+document
+.getElementById(
+"endKm"
+).value || 0
+);
+
+document
+.getElementById(
+"distanceResult"
+)
+.innerText =
+end - start;
+
+}
+
+document
+.addEventListener(
+"input",
+calcDistance
+);
+
+</script>
+
+<!-- 日常点検 -->
 
 <div class="card">
 
@@ -204,72 +637,72 @@ oninput="calcDistance()">
 
 </div>
 
-<!-- 週次グリース -->
+<!-- グリース管理 -->
 
 <div class="card">
 
 <div class="section-title">
-週次グリース管理
+グリース管理
 </div>
 
-<label>次回週次グリース予定日</label>
-<input type="date" id="greaseNext">
+<label>次回予定日</label>
+
+<input
+type="date"
+id="greaseNext">
 
 </div>
 
-<!-- 異常 -->
+<!-- 異常報告 -->
 
-<div class="card" id="memoArea" style="display:none;">
+<div
+class="card"
+id="memoArea"
+style="display:none;"
+>
 
 <div class="section-title">
 異常報告
 </div>
 
 <label>異常内容</label>
-<textarea id="memo"></textarea>
 
-<label>異常写真</label>
-<input type="file" id="photo">
-
-</div>
+<textarea
+id="memo"
+></textarea>
 
 </div>
 
-<!-- 送信 -->
+</div>
+
+<!-- 送信ボタン -->
 
 <div class="fixed-submit">
 
-<button class="submit-btn"
-onclick="sendData()">
+<button
+class="submit-btn"
+id="submitBtn"
+onclick="sendData()"
+>
+
 送信
+
 </button>
 
 </div>
 
 <script>
 
-// Apps Script URL
+// --------------------
+// GAS URL
+// --------------------
 
 const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbyjxMWOa1BICuAzKvWeffe-Sk1a4AFDRIYl0s2bwW0FUDntQ7vpPSXrno7wNsZ3k9zg/exec";
+"ここにGASデプロイURL";
 
-// QR車番自動入力
-
-const params =
-new URLSearchParams(window.location.search);
-
-const truckParam =
-params.get("truck");
-
-if(truckParam){
-
-  document
-  .getElementById("truck")
-  .value = truckParam;
-
-}
-
+// --------------------
 // 点検項目
+// --------------------
 
 const items = [
 
@@ -281,192 +714,426 @@ const items = [
 "ホーン",
 "バックブザー",
 "荷台",
-"グリースアップ（毎日）",
-"グリースアップ（週1）",
-"アルコール"
+"グリースアップ（キングピン・トラニオン）",
+"グリースアップ（週１項目）"
 
 ];
 
-const checks = {};
+let checks = {};
 
 const checksDiv =
 document.getElementById("checks");
 
+// --------------------
 // 点検生成
+// --------------------
 
 items.forEach(item=>{
 
-  const div =
-  document.createElement("div");
+const div =
+document.createElement("div");
 
-  div.className = "check-group";
+div.className =
+"check-item";
 
-  div.innerHTML = `
+div.innerHTML = `
 
-  <div class="check-title">
-  ${item}
-  </div>
+<div class="check-title">
+${item}
+</div>
 
-  <div class="check-buttons">
+<div class="check-buttons">
 
-    <button class="ok">
-    ○
-    </button>
+<button
+type="button"
+class="ok"
+>
+○
+</button>
 
-    <button class="ng">
-    ×
-    </button>
+<button
+type="button"
+class="ng"
+>
+×
+</button>
 
-    <button class="na">
-    該当なし
-    </button>
+<button
+type="button"
+class="na"
+>
+該当なし
+</button>
 
-  </div>
+</div>
 
-  `;
+`;
 
-  const buttons =
-  div.querySelectorAll("button");
+const buttons =
+div.querySelectorAll(
+"button"
+);
 
-  buttons[0].onclick = ()=>{
-    setCheck(item,"OK",buttons[0]);
-  };
+buttons[0].onclick =
+()=>setCheck(
+item,
+"OK",
+buttons[0]
+);
 
-  buttons[1].onclick = ()=>{
-    setCheck(item,"NG",buttons[1]);
-  };
+buttons[1].onclick =
+()=>setCheck(
+item,
+"NG",
+buttons[1]
+);
 
-  buttons[2].onclick = ()=>{
-    setCheck(item,"該当なし",buttons[2]);
-  };
+buttons[2].onclick =
+()=>setCheck(
+item,
+"該当なし",
+buttons[2]
+);
 
-  checksDiv.appendChild(div);
+checksDiv.appendChild(
+div
+);
 
 });
 
+// --------------------
 // 点検状態
+// --------------------
 
-function setCheck(item,value,btn){
+function setCheck(
+item,
+value,
+btn
+){
 
-  checks[item] = value;
+checks[item] =
+value;
 
-  const parent =
-  btn.parentElement;
+btn.parentElement
+.querySelectorAll(
+"button"
+)
+.forEach(b=>{
 
-  parent.querySelectorAll("button")
-  .forEach(b=>b.classList.remove("active"));
+b.classList.remove(
+"active"
+);
 
-  btn.classList.add("active");
+});
 
-  // NGなら異常欄表示
+btn.classList.add(
+"active"
+);
 
-  if(value==="NG"){
+const hasNg =
+Object.values(
+checks
+).includes("NG");
 
-    document
-    .getElementById("memoArea")
-    .style.display = "block";
+document
+.getElementById(
+"memoArea"
+)
+.style.display =
+hasNg
+?
+"block"
+:
+"none";
 
-  }
+if(
+item ===
+"グリースアップ（週１項目）"
+&&
+value==="OK"
+){
 
-  // 週次グリースなら7日後
+const next =
+new Date();
 
-  if(item==="グリースアップ（週1）"
-  && value==="OK"){
+next.setDate(
+next.getDate()+7
+);
 
-    const today = new Date();
-
-    today.setDate(today.getDate()+7);
-
-    const yyyy =
-    today.getFullYear();
-
-    const mm =
-    String(today.getMonth()+1)
-    .padStart(2,'0');
-
-    const dd =
-    String(today.getDate())
-    .padStart(2,'0');
-
-    document
-    .getElementById("greaseNext")
-    .value = `${yyyy}-${mm}-${dd}`;
-
-  }
-
-}
-
-// 走行距離計算
-
-function calcDistance(){
-
-  const start =
-  Number(document
-  .getElementById("startKm")
-  .value);
-
-  const end =
-  Number(document
-  .getElementById("endKm")
-  .value);
-
-  const distance =
-  end - start;
-
-  document
-  .getElementById("distanceResult")
-  .innerText = distance;
+document
+.getElementById(
+"greaseNext"
+)
+.value =
+next
+.toISOString()
+.split("T")[0];
 
 }
 
+saveForm();
+
+}
+
+// --------------------
+// LocalStorage保存
+// --------------------
+
+function saveForm(){
+
+localStorage.setItem(
+"shinseiForm",
+JSON.stringify({
+
+driver:
+driver.value,
+
+truck:
+truck.value,
+
+contractor:
+contractor.value,
+
+startKm:
+startKm.value,
+
+endKm:
+endKm.value,
+
+fuelKm:
+fuelKm.value,
+
+fuelLiter:
+fuelLiter.value,
+
+adblueLiter:
+adblueLiter.value,
+
+memo:
+memo.value,
+
+checks:
+checks
+
+})
+
+);
+
+}
+
+// --------------------
+// LocalStorage復元
+// --------------------
+
+function loadForm(){
+
+const saved =
+localStorage.getItem(
+"shinseiForm"
+);
+
+if(!saved) return;
+
+const data =
+JSON.parse(saved);
+
+driver.value =
+data.driver || "";
+
+truck.value =
+data.truck || "";
+
+contractor.value =
+data.contractor || "";
+
+startKm.value =
+data.startKm || "";
+
+endKm.value =
+data.endKm || "";
+
+fuelKm.value =
+data.fuelKm || "";
+
+fuelLiter.value =
+data.fuelLiter || "";
+
+adblueLiter.value =
+data.adblueLiter || "";
+
+memo.value =
+data.memo || "";
+
+checks =
+data.checks || {};
+
+calcDistance();
+
+}
+
+// --------------------
 // 送信
+// --------------------
 
 async function sendData(){
 
-  const data = {
+try{
 
-    driver:
-    document.getElementById("driver").value,
+const submitBtn =
+document.getElementById(
+"submitBtn"
+);
 
-    truck:
-    document.getElementById("truck").value,
+submitBtn.disabled =
+true;
 
-    site:
-    document.getElementById("site").value,
+submitBtn.innerText =
+"送信中...";
 
-    startKm:
-    document.getElementById("startKm").value,
+const data = {
 
-    endKm:
-    document.getElementById("endKm").value,
+driver:
+driver.value,
 
-    fuelKm:
-    document.getElementById("fuelKm").value,
+truck:
+truck.value,
 
-    fuelLiter:
-    document.getElementById("fuelLiter").value,
+contractor:
+contractor.value,
 
-    greaseNext:
-    document.getElementById("greaseNext").value,
+startKm:
+startKm.value,
 
-    memo:
-    document.getElementById("memo").value,
+endKm:
+endKm.value,
 
-    checks:checks
+distance:
+Number(
+endKm.value||0
+)
+-
+Number(
+startKm.value||0
+),
 
-  };
+fuelKm:
+fuelKm.value,
 
-  await fetch(SCRIPT_URL,{
+fuelLiter:
+fuelLiter.value,
 
-    method:"POST",
+adblueLiter:
+adblueLiter.value,
 
-    body:JSON.stringify(data)
+memo:
+memo.value,
 
-  });
+checks:
+checks
 
-  alert("送信完了");
+};
+
+const response =
+await fetch(
+SCRIPT_URL,
+{
+method:"POST",
+headers:{
+"Content-Type":
+"text/plain"
+},
+body:
+JSON.stringify(data)
+}
+);
+
+const result =
+await response.json();
+
+if(
+result.status
+!==
+"success"
+){
+
+alert(
+"送信失敗\n"+
+result.message
+);
+
+submitBtn.disabled =
+false;
+
+submitBtn.innerText =
+"送信";
+
+return;
 
 }
+
+alert(
+"送信完了"
+);
+
+localStorage.removeItem(
+"shinseiForm"
+);
+
+location.reload();
+
+}catch(error){
+
+alert(
+"通信エラー\n"+
+error
+);
+
+document
+.getElementById(
+"submitBtn"
+)
+.disabled =
+false;
+
+document
+.getElementById(
+"submitBtn"
+)
+.innerText =
+"送信";
+
+}
+
+}
+
+// --------------------
+// 起動
+// --------------------
+
+window.onload = ()=>{
+
+loadForm();
+
+document
+.querySelectorAll(
+"input,textarea,select"
+)
+.forEach(el=>{
+
+el.addEventListener(
+"input",
+()=>{
+
+saveForm();
+
+calcDistance();
+
+}
+);
+
+});
+
+};
 
 </script>
 
