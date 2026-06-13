@@ -163,8 +163,6 @@ textarea{
 
 <div class="container">
 
-<!-- 基本情報 -->
-
 <div class="card">
 
 <div class="section-title">
@@ -182,15 +180,11 @@ textarea{
 
 </div>
 
-<!-- 点呼管理 -->
-
 <div class="card">
 
 <div class="section-title">
 点呼管理
 </div>
-
-<!-- 業務前 -->
 
 <h3 style="margin-bottom:10px;">
 業務前点呼
@@ -241,8 +235,6 @@ textarea{
 
 <hr style="margin:20px 0;">
 
-<!-- 中間 -->
-
 <h3 style="margin-bottom:10px;">
 中間点呼
 </h3>
@@ -291,8 +283,6 @@ textarea{
 </select>
 
 <hr style="margin:20px 0;">
-
-<!-- 業務後 -->
 
 <h3 style="margin-bottom:10px;">
 業務後点呼
@@ -343,8 +333,6 @@ textarea{
 
 </div>
 
-<!-- 現場管理 -->
-
 <div class="card">
 
 <div class="section-title">
@@ -385,8 +373,6 @@ onclick="addSite()"
 
 </div>
 
-<!-- ETC管理 -->
-
 <div class="card">
 
 <div class="section-title">
@@ -408,10 +394,10 @@ ETC情報
 </select>
 
 <label>乗り口IC</label>
-<input class="etcStart">
+<select class="etcStart"></select>
 
 <label>降り口IC</label>
-<input class="etcEnd">
+<select class="etcEnd"></select>
 
 <label>高速使用回数</label>
 <input
@@ -436,8 +422,6 @@ onclick="addEtc()"
 </button>
 
 </div>
-
-<!-- 運行情報 -->
 
 <div class="card">
 
@@ -487,6 +471,46 @@ km
 <script>
 
 // ---------------------
+// 北海道 高速道路ICリスト
+// ---------------------
+const hokkaidoICs = [
+  "",
+  "-- 道央自動車道 --",
+  "大沼公園IC", "森IC", "落部IC", "八雲IC", "国縫IC", "長万部IC", "黒松内JCT", "豊浦IC", "虻田洞爺湖IC", "伊達IC", "室蘭IC", "登別室蘭IC", "登別東IC", "白老IC", "苫小牧西IC", "苫小牧東IC", "沼ノ端西IC", "新千歳空港IC", "千歳IC", "千歳恵庭JCT", "恵庭IC", "北広島IC", "札幌南IC/TB", "札幌JCT", "江別西IC", "江別東IC", "岩見沢IC", "三笠IC", "美唄IC", "奈井江砂川IC", "砂川SA/スマートIC", "滝川IC", "深川IC", "深川JCT", "旭川鷹栖IC", "旭川北IC", "比布JCT", "比布大雪PA/スマートIC", "和寒IC", "士別剣淵IC",
+  "-- 札樽自動車道 --",
+  "札幌JCT", "札幌北(第一)IC", "札幌北(第二)IC", "新川IC", "伏古IC", "雁来IC", "札幌西IC/TB", "手稲IC", "銭函IC", "朝里IC", "小樽IC", "小樽JCT",
+  "-- 後志自動車道 --",
+  "小樽JCT", "余市IC",
+  "-- 道東自動車道 --",
+  "千歳恵庭JCT", "千歳東IC", "追分町IC", "むかわ穂別IC", "占冠IC", "トマムIC", "十勝清水IC", "芽室IC", "帯広JCT", "音更帯広IC", "池田IC", "本別IC", "足寄IC", "浦幌IC", "白糠IC", "庶路IC", "阿寒IC", "釧路西IC",
+  "-- 日高自動車道 --",
+  "苫小牧東IC/JCT", "沼ノ端東IC", "苫東中央IC", "厚真IC", "むかわ四季の館IC", "鵡川IC", "日高富川IC", "日高門別IC", "厚賀IC",
+  "-- 深川留萌自動車道 --",
+  "深川JCT", "深川西IC", "妹背牛IC", "秩父別IC", "北竜ひまわりIC", "留萌大和田IC", "留萌IC",
+  "-- 旭川紋別自動車道 --",
+  "比布JCT", "良瑠石IC", "愛別IC", "愛山上川IC", "上川層雲峡IC", "奥白滝IC", "白滝IC", "丸瀬布IC", "遠軽発祥の地IC", "遠軽IC",
+  "-- 苫小牧東インター線 --",
+  "苫小牧東IC", "沼ノ端西IC"
+];
+
+// プルダウンに選択肢を詰め込む共通関数
+function setupIcOptions(selectElement) {
+  selectElement.innerHTML = "";
+  hokkaidoICs.forEach(ic => {
+    const opt = document.createElement("option");
+    opt.value = ic;
+    opt.innerText = ic;
+    // タイトルのような区切り行は選択できないようにする
+    if (ic.startsWith("--")) {
+      opt.disabled = true;
+      opt.style.fontWeight = "bold";
+      opt.style.background = "#eee";
+    }
+    selectElement.appendChild(opt);
+  });
+}
+
+// ---------------------
 // 現場追加
 // ---------------------
 
@@ -529,6 +553,8 @@ document
 )
 .appendChild(div);
 
+// 新しい現場追加時にも入力監視をバインドし直す
+bindInputEvents();
 }
 
 // ---------------------
@@ -561,10 +587,10 @@ div.innerHTML = `
 </select>
 
 <label>乗り口IC</label>
-<input class="etcStart">
+<select class="etcStart"></select>
 
 <label>降り口IC</label>
-<input class="etcEnd">
+<select class="etcEnd"></select>
 
 <label>高速使用回数</label>
 <input
@@ -584,6 +610,12 @@ document
 )
 .appendChild(div);
 
+// 追加されたセレクトボックスに北海道ICリストをセット
+setupIcOptions(div.querySelector(".etcStart"));
+setupIcOptions(div.querySelector(".etcEnd"));
+
+// 新しいETC追加時にも入力監視をバインドし直す
+bindInputEvents();
 }
 
 // ---------------------
@@ -625,8 +657,6 @@ calcDistance
 
 </script>
 
-<!-- 日常点検 -->
-
 <div class="card">
 
 <div class="section-title">
@@ -636,8 +666,6 @@ calcDistance
 <div id="checks"></div>
 
 </div>
-
-<!-- グリース管理 -->
 
 <div class="card">
 
@@ -652,8 +680,6 @@ type="date"
 id="greaseNext">
 
 </div>
-
-<!-- 異常報告 -->
 
 <div
 class="card"
@@ -674,8 +700,6 @@ id="memo"
 </div>
 
 </div>
-
-<!-- 送信ボタン -->
 
 <div class="fixed-submit">
 
@@ -881,6 +905,30 @@ saveForm();
 
 function saveForm(){
 
+// 動的に追加された現場情報を取得
+const sites = [];
+document.querySelectorAll(".site-block").forEach(block => {
+  sites.push({
+    siteName: block.querySelector(".siteName").value,
+    unic: block.querySelector(".unic").value,
+    loading: block.querySelector(".loading").value,
+    unloading: block.querySelector(".unloading").value
+  });
+});
+
+// 動的に追加されたETC情報を取得
+const etcs = [];
+document.querySelectorAll(".etc-block").forEach(block => {
+  etcs.push({
+    type: block.querySelector(".etcType").value,
+    start: block.querySelector(".etcStart").value,
+    end: block.querySelector(".etcEnd").value,
+    count: block.querySelector(".etcCount").value,
+    price: block.querySelector(".etcPrice").value
+  });
+});
+
+// 点呼管理データの一時保存
 localStorage.setItem(
 "shinseiForm",
 JSON.stringify({
@@ -893,6 +941,30 @@ truck.value,
 
 contractor:
 contractor.value,
+
+beforeRollCall: beforeRollCall.value,
+beforeMethod: beforeMethod.value,
+beforeHealth: beforeHealth.value,
+beforeAlcoholCheck: beforeAlcoholCheck.value,
+beforeAlcoholResult: beforeAlcoholResult.value,
+beforeDetector: beforeDetector.value,
+
+middleRollCall: middleRollCall.value,
+middleMethod: middleMethod.value,
+middleHealth: middleHealth.value,
+middleAlcoholCheck: middleAlcoholCheck.value,
+middleAlcoholResult: middleAlcoholResult.value,
+middleDetector: middleDetector.value,
+
+afterRollCall: afterRollCall.value,
+afterMethod: afterMethod.value,
+afterHealth: afterHealth.value,
+afterAlcoholCheck: afterAlcoholCheck.value,
+afterAlcoholResult: afterAlcoholResult.value,
+afterDetector: afterDetector.value,
+
+sites: sites,
+etcs: etcs,
 
 startKm:
 startKm.value,
@@ -908,6 +980,8 @@ fuelLiter.value,
 
 adblueLiter:
 adblueLiter.value,
+
+greaseNext: greaseNext.value,
 
 memo:
 memo.value,
@@ -946,6 +1020,83 @@ data.truck || "";
 contractor.value =
 data.contractor || "";
 
+if(data.beforeRollCall) beforeRollCall.value = data.beforeRollCall;
+if(data.beforeMethod) beforeMethod.value = data.beforeMethod;
+if(data.beforeHealth) beforeHealth.value = data.beforeHealth;
+if(data.beforeAlcoholCheck) beforeAlcoholCheck.value = data.beforeAlcoholCheck;
+if(data.beforeAlcoholResult) beforeAlcoholResult.value = data.beforeAlcoholResult;
+if(data.beforeDetector) beforeDetector.value = data.beforeDetector;
+
+if(data.middleRollCall) middleRollCall.value = data.middleRollCall;
+if(data.middleMethod) middleMethod.value = data.middleMethod;
+if(data.middleHealth) middleHealth.value = data.middleHealth;
+if(data.middleAlcoholCheck) middleAlcoholCheck.value = data.middleAlcoholCheck;
+if(data.middleAlcoholResult) middleAlcoholResult.value = data.middleAlcoholResult;
+if(data.middleDetector) middleDetector.value = data.middleDetector;
+
+if(data.afterRollCall) afterRollCall.value = data.afterRollCall;
+if(data.afterMethod) afterMethod.value = data.afterMethod;
+if(data.afterHealth) afterHealth.value = data.afterHealth;
+if(data.afterAlcoholCheck) afterAlcoholCheck.value = data.afterAlcoholCheck;
+if(data.afterAlcoholResult) afterAlcoholResult.value = data.afterAlcoholResult;
+if(data.afterDetector) afterDetector.value = data.afterDetector;
+
+// 現場情報のブロック数調整と復元
+if(data.sites && data.sites.length > 0){
+  const container = document.getElementById("siteContainer");
+  container.innerHTML = "";
+  data.sites.forEach((site, index) => {
+    if(index === 0){
+      container.innerHTML = `
+        <div class="site-block">
+          <label>現場名</label><input class="siteName">
+          <label>ユニック使用</label>
+          <select class="unic"><option value=""></option><option>有</option><option>無</option></select>
+          <label>積場</label><input class="loading">
+          <label>降場</label><input class="unloading">
+        </div>`;
+    } else {
+      addSite();
+    }
+    const blocks = container.querySelectorAll(".site-block");
+    const currentBlock = blocks[blocks.length - 1];
+    currentBlock.querySelector(".siteName").value = site.siteName || "";
+    currentBlock.querySelector(".unic").value = site.unic || "";
+    currentBlock.querySelector(".loading").value = site.loading || "";
+    currentBlock.querySelector(".unloading").value = site.unloading || "";
+  });
+}
+
+// ETC情報のブロック数調整と復元
+if(data.etcs && data.etcs.length > 0){
+  const container = document.getElementById("etcContainer");
+  container.innerHTML = "";
+  data.etcs.forEach((etc, index) => {
+    if(index === 0){
+      container.innerHTML = `
+        <div class="etc-block">
+          <label>支払区分</label>
+          <select class="etcType"><option value=""></option><option>得意先払い</option><option>当社払い</option><option>本人払い</option></select>
+          <label>乗り口IC</label><select class="etcStart"></select>
+          <label>降り口IC</label><select class="etcEnd"></select>
+          <label>高速使用回数</label><input type="number" class="etcCount">
+          <label>高速料金(円)</label><input type="number" class="etcPrice">
+        </div>`;
+      setupIcOptions(container.querySelector(".etcStart"));
+      setupIcOptions(container.querySelector(".etcEnd"));
+    } else {
+      addEtc();
+    }
+    const blocks = container.querySelectorAll(".etc-block");
+    const currentBlock = blocks[blocks.length - 1];
+    currentBlock.querySelector(".etcType").value = etc.type || "";
+    currentBlock.querySelector(".etcStart").value = etc.start || "";
+    currentBlock.querySelector(".etcEnd").value = etc.end || "";
+    currentBlock.querySelector(".etcCount").value = etc.count || "";
+    currentBlock.querySelector(".etcPrice").value = etc.price || "";
+  });
+}
+
 startKm.value =
 data.startKm || "";
 
@@ -961,11 +1112,35 @@ data.fuelLiter || "";
 adblueLiter.value =
 data.adblueLiter || "";
 
+greaseNext.value =
+data.greaseNext || "";
+
 memo.value =
 data.memo || "";
 
 checks =
 data.checks || {};
+
+// 日常点検ボタンのアクティブ状態復元
+Object.keys(checks).forEach(item => {
+  const value = checks[item];
+  const titles = document.querySelectorAll(".check-title");
+  titles.forEach(t => {
+    if(t.innerText.trim() === item){
+      const buttons = t.parentElement.querySelectorAll("button");
+      buttons.forEach(b => {
+        if((b.innerText.trim() === "○" && value === "OK") ||
+           (b.innerText.trim() === "×" && value === "NG") ||
+           (b.innerText.trim() === "該当なし" && value === "該当なし")){
+          b.classList.add("active");
+        }
+      });
+    }
+  });
+});
+
+const hasNg = Object.values(checks).includes("NG");
+document.getElementById("memoArea").style.display = hasNg ? "block" : "none";
 
 calcDistance();
 
@@ -990,6 +1165,29 @@ true;
 submitBtn.innerText =
 "送信中...";
 
+// 送信時にリアルタイムの現場データを集計
+const sites = [];
+document.querySelectorAll(".site-block").forEach(block => {
+  sites.push({
+    siteName: block.querySelector(".siteName").value,
+    unic: block.querySelector(".unic").value,
+    loading: block.querySelector(".loading").value,
+    unloading: block.querySelector(".unloading").value
+  });
+});
+
+// 送信時にリアルタイムのETCデータを集計
+const etcs = [];
+document.querySelectorAll(".etc-block").forEach(block => {
+  etcs.push({
+    type: block.querySelector(".etcType").value,
+    start: block.querySelector(".etcStart").value,
+    end: block.querySelector(".etcEnd").value,
+    count: block.querySelector(".etcCount").value,
+    price: block.querySelector(".etcPrice").value
+  });
+});
+
 const data = {
 
 driver:
@@ -1000,6 +1198,30 @@ truck.value,
 
 contractor:
 contractor.value,
+
+beforeRollCall: beforeRollCall.value,
+beforeMethod: beforeMethod.value,
+beforeHealth: beforeHealth.value,
+beforeAlcohol: beforeAlcoholCheck.value,
+beforeAlcoholResult: beforeAlcoholResult.value,
+beforeDetector: beforeDetector.value,
+
+middleRollCall: middleRollCall.value,
+middleMethod: middleMethod.value,
+middleHealth: middleHealth.value,
+middleAlcohol: middleAlcoholCheck.value,
+middleAlcoholResult: middleAlcoholResult.value,
+middleDetector: middleDetector.value,
+
+afterRollCall: afterRollCall.value,
+afterMethod: afterMethod.value,
+afterHealth: afterHealth.value,
+afterAlcohol: afterAlcoholCheck.value,
+afterAlcoholResult: afterAlcoholResult.value,
+afterDetector: afterDetector.value,
+
+sites: sites,
+etcs: etcs,
 
 startKm:
 startKm.value,
@@ -1024,6 +1246,8 @@ fuelLiter.value,
 
 adblueLiter:
 adblueLiter.value,
+
+greaseNext: greaseNext.value,
 
 memo:
 memo.value,
@@ -1106,32 +1330,31 @@ document
 
 }
 
+// 入力イベント割り当て関数
+function bindInputEvents() {
+  document.querySelectorAll("input,textarea,select").forEach(el=>{
+    el.removeEventListener("input", handleInputChange);
+    el.addEventListener("input", handleInputChange);
+  });
+}
+
+function handleInputChange() {
+  saveForm();
+  calcDistance();
+}
+
 // --------------------
 // 起動
 // --------------------
 
 window.onload = ()=>{
 
+// 最初のETC入力欄に北海道ICリストをセット
+setupIcOptions(document.querySelector(".etcStart"));
+setupIcOptions(document.querySelector(".etcEnd"));
+
 loadForm();
-
-document
-.querySelectorAll(
-"input,textarea,select"
-)
-.forEach(el=>{
-
-el.addEventListener(
-"input",
-()=>{
-
-saveForm();
-
-calcDistance();
-
-}
-);
-
-});
+bindInputEvents();
 
 };
 
